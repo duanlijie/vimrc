@@ -1,0 +1,91 @@
+set nocompatible              "禁止vi兼容模式 
+filetype off                  " required
+
+" vundle插件管理配置
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" 插件================开始
+
+" 编辑器基本插件
+Plugin 'VundleVim/Vundle.vim' " vundle管理插件 地址：https://github.com/VundleVim/Vundle.vim
+Plugin 'scrooloose/nerdtree' " 目录树插件 地址：https://github.com/scrooloose/nerdtree
+Plugin 'terryma/vim-multiple-cursors' " 文本多选，进入visual模式选择文本，ctrl+shift+n选择下一个 地址: https://github.com/terryma/vim-multiple-cursors
+Plugin 'vim-airline/vim-airline' " 状态栏美化插件 地址：https://github.com/vim-airline/vim-airline
+Plugin 'sickill/vim-monokai' " monokai主题 地址： https://github.com/sickill/vim-monokai
+Plugin 'Shougo/neocomplete.vim' " 自动补全：地址：https://github.com/Shougo/neocomplete.vim
+Plugin 'ervandew/supertab' " 增强tab键补全 地址：https://github.com/ervandew/supertab
+Plugin 'kien/rainbow_parentheses.vim' " 为括号增加颜色 地址：https://github.com/kien/rainbow_parentheses.vim
+Plugin 'scrooloose/nerdcommenter' " 注释插件
+Plugin 'Yggdroot/indentLine' " 缩进指示线
+
+" python编程用插件
+
+" 插件================结束
+call vundle#end()            " required
+filetype plugin indent on    " 自动检测文件类型
+
+" 配色方案
+syntax on " 语法高亮
+set background=dark " 黑色背景色
+colorscheme monokai " 设置颜色主题
+"colorscheme solarized
+
+" 基本配置
+set encoding=utf-8
+set nobackup " 不创建备份文件
+set noswapfile " 不创建swap交换文件
+"set mouse=a " 支持使用鼠标
+set number " 设置行号
+set history=1024 " 记住多少步操作
+set autochdir " 自动切换工作目录，主要用在vim会话打开多个文件的情况，该配置可自动切换到当前正在编辑的文件
+set nobomb " 去掉UTF-8编码的BOM标记
+set clipboard+=unnamed " vim的默认寄存器和系统剪贴板共享
+set lines=35 columns=140 " 设置编辑器大小
+set autoindent " 按下回车后，下一行缩进与上一行保持一致
+set tabstop=2 " 按一次tab缩进几个空格
+set shiftwidth=2 " 在文本上按下>>（增加一级缩进）、<<（取消一级缩进）或者==（取消全部缩进）时，每一级的字符数
+set expandtab " 将tab自动转为空格
+set softtabstop=2 " tab转为多少个空格
+set scrolloff=2 " 垂直滚动时，光标距离顶部/底部的位置，单位为行
+set showcmd " 在底部显示当前的命令 
+set hlsearch " 高亮搜索结果
+set cursorline " 高亮光标所在行
+set cursorcolumn " 高亮光标所在列
+set ignorecase " 忽略大小写
+
+" 括号颜色插件，自动开启括号的颜色
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
+" 缩进指示线
+let g:indentLine_char = '|'
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+" F5运行python
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+    exec "w"
+    if &filetype == 'c'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'cpp'
+        exec "!g++ % -o %<"
+        exec "!time ./%<"
+    elseif &filetype == 'java'
+        exec "!javac %"
+        exec "!time java %<"
+    elseif &filetype == 'sh'
+        :!time bash %
+    elseif &filetype == 'python'
+        exec "!time python %"
+    elseif &filetype == 'html'
+        exec "!firefox % &"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'mkd'
+        exec "!~/.vim/markdown.pl % > %.html &"
+        exec "!firefox %.html &"
+    endif
+endfunc
+
